@@ -3,6 +3,7 @@ package com.managment.budget_management_api.Service;
 import com.managment.budget_management_api.Exceptions.TransactionNotFoundException;
 import com.managment.budget_management_api.Model.Transaction;
 import com.managment.budget_management_api.Repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,7 @@ public class TransactionServiceImpl implements ITransactionService{
         return transactionRepository.findById(transactionID);
     }
 
+    @Transactional
     @Override
     public void deleteById(Integer transactionID) {
         logger.info("Attempding to delete transaction with ID: {}", transactionID);
