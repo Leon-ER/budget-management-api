@@ -3,6 +3,7 @@ package com.managment.budget_management_api.Service;
 import com.managment.budget_management_api.Exceptions.BudgetNotFoundException;
 import com.managment.budget_management_api.Model.Budget;
 import com.managment.budget_management_api.Repository.BudgetRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class BudgetServiceImpl implements IBudgetService {
             throw new IllegalArgumentException("Budget cannot be null");
         }
         Budget existingBudget = budgetRepository.findById(budgetId)
-                .orElseThrow(()-> new BudgetNotFoundException("Budget with id " + budgetId + "not found"));
+                .orElseThrow(()-> new BudgetNotFoundException(String.format("Budget with ID: %s not found", budgetId)));
         if(budgetDetails.getCategoryName() != null){
             existingBudget.setCategoryName(budgetDetails.getCategoryName());
         }
@@ -57,11 +58,12 @@ public class BudgetServiceImpl implements IBudgetService {
         return budgetRepository.findById(budgetId);
     }
 
+    @Transactional
     @Override
     public void deleteById(Integer budgetId) {
         logger.info("Attempting to delete budget with ID: {}",budgetId);
         Budget existingBudget = budgetRepository.findById(budgetId)
-                .orElseThrow(()-> new BudgetNotFoundException("Budget with ID " + budgetId + "not found"));
+                .orElseThrow(()-> new BudgetNotFoundException(String.format("Budget with ID: %s not found", budgetId)));
         budgetRepository.delete(existingBudget);
         logger.info("Budget with ID: {} deleted successfully", budgetId);
     }

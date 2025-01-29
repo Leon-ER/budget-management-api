@@ -42,12 +42,15 @@ public class UserServiceImpl implements IUserService {
             throw new IllegalArgumentException("User details cannot be null");
         }
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with ID: %s not found", userId)));
         if (userDetails.getUsername() != null) {
             existingUser.setUsername(userDetails.getUsername());
         }
         if (userDetails.getEmail() != null) {
             existingUser.setEmail(userDetails.getEmail());
+        }
+        if(userDetails.getPassword() != null){
+            existingUser.setPassword(userDetails.getPassword());
         }
         logger.info("User with ID: {} updated successfully", userId);
         return userRepository.save(existingUser);
@@ -63,7 +66,7 @@ public class UserServiceImpl implements IUserService {
     public void deleteById(Integer userId) {
         logger.info("Attempting to delete user with ID: {}", userId);
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with ID: %s not found", userId)));
         userRepository.delete(existingUser);
         logger.info("User with ID: {} deleted successfully", userId);
     }
