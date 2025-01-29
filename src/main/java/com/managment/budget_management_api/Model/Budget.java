@@ -1,6 +1,7 @@
 package com.managment.budget_management_api.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,12 +18,15 @@ public class Budget {
     private Integer budgetId;
 
     @ManyToOne
+    @NotBlank(message = "user id is required")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotBlank(message = "Category name is required")
     @Column(nullable = false, length = 50)
     private String categoryName;
 
+    @NotBlank(message = "Total budget is required")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalBudget;
 
