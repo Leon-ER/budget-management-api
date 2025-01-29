@@ -28,5 +28,4 @@ public class AuthController {
                     .body("An error occurred while adding the user.");
         }
     }
-
 }
