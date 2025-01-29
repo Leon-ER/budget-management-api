@@ -2,6 +2,7 @@ package com.managment.budget_management_api.Controller;
 
 import com.managment.budget_management_api.Model.User;
 import com.managment.budget_management_api.Service.IUserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AuthController {
     private IUserService userService;
 
     @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@RequestBody User user) {
+    public ResponseEntity<String> addUser(@Valid @RequestBody User user) {
         try {
             userService.save(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User added successfully.");

@@ -1,6 +1,7 @@
 package com.managment.budget_management_api.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,19 +19,24 @@ public class Transaction {
     private Integer transactionId;
 
     @ManyToOne
+    @NotBlank(message = "userID is required")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @NotBlank(message = "budget id is required")
     @JoinColumn(name = "budget_id", nullable = false)
     private Budget budget;
 
+    @NotBlank(message = "Transaction type is required")
     @Column(nullable = false)
     private String transactionType;
 
+    @NotBlank(message = "Amount is required")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
+    @NotBlank(message = "Description is required")
     @Column(length = 255)
     private String description;
 

@@ -1,6 +1,7 @@
 package com.managment.budget_management_api.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,12 +17,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
+    @NotBlank(message = "Username is required")
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+    @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
 
+    @NotBlank(message = "email is required")
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
