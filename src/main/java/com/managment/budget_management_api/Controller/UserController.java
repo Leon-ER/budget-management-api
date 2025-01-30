@@ -50,13 +50,13 @@ public class UserController {
             @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             return ResponseEntity.ok(userService.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(
-                            messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale))));
+                    .orElseThrow(() -> new UserNotFoundException()));
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale));
         }
     }
+
 
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(

@@ -64,7 +64,7 @@ public class TransactionServiceImpl implements ITransactionService{
     @Transactional
     @Override
     public void deleteById(Integer transactionID) {
-        logger.info("Attempding to delete transaction with ID: {}", transactionID);
+        logger.info("Attempting to delete transaction with ID: {}", transactionID);
         Transaction existingTransaction = transactionRepository.findById(transactionID)
                 .orElseThrow(() -> new TransactionNotFoundException(String.format("Transaction with ID: %s not found",transactionID)));
         transactionRepository.delete(existingTransaction);

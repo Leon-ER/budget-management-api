@@ -10,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.MessageSource;
+
+
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/budget")
@@ -18,49 +22,66 @@ public class BudgetController {
     @Autowired
     private IBudgetService budgetService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @PostMapping("/addBudget")
-    public ResponseEntity<String> addBudget(@Valid @RequestBody Budget budget) {
+    public ResponseEntity<String> addBudget(
+            @Valid @RequestBody Budget budget,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             budgetService.save(budget);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Budget created successfully");
+                    .body(messageSource.getMessage("response.budget.created", null, locale));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occured while adding a budget");
+                    .body(messageSource.getMessage("error.budget.serverAdding", null, locale));
         }
     }
 
     @PutMapping("/update/{budgetId}")
-    public ResponseEntity<?> updateBudget(@Min(1) @PathVariable Integer budgetId, @Valid @RequestBody Budget budget) {
+    public ResponseEntity<String> updateBudget(
+            @Min(1) @PathVariable Integer budgetId,
+            @Valid @RequestBody Budget budget,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
-            Budget updatedBudget = budgetService.update(budgetId, budget);
-            return ResponseEntity.ok(updatedBudget);
+            budgetService.update(budgetId, budget);
+            return ResponseEntity.ok(messageSource.getMessage("response.budget.updated", new Object[]{budgetId}, locale));
         } catch (BudgetNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("error.budget.notfound", new Object[]{budgetId}, locale));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while updating a budget");
+                    .body(messageSource.getMessage("error.budget.serverUpdating", null, locale));
         }
     }
 
     @GetMapping("/{budgetId}")
-    public ResponseEntity<Budget> getBudget(@Min(1) @PathVariable Integer budgetId) {
-        return ResponseEntity.ok(budgetService.findById(budgetId)
-                .orElseThrow(() -> new BudgetNotFoundException(String.format("Budget with ID: %s not found", budgetId))));
+    public ResponseEntity<?> getBudget(
+            @Min(1) @PathVariable Integer budgetId,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+        try {
+            return ResponseEntity.ok(budgetService.findById(budgetId)
+                    .orElseThrow(() -> new BudgetNotFoundException()));
+        } catch (BudgetNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("error.budget.notfound", new Object[]{budgetId}, locale));
+        }
+
     }
 
     @DeleteMapping("/delete/{budgetId}")
-    public ResponseEntity<String> deleteBudget(@Min(1) @PathVariable Integer budgetId) {
+    public ResponseEntity<String> deleteBudget(
+            @Min(1) @PathVariable Integer budgetId,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             budgetService.deleteById(budgetId);
-            return ResponseEntity.ok(String.format("Budget with ID: %s deleted successfully", budgetId));
+            return ResponseEntity.ok(messageSource.getMessage("response.budget.deleted", new Object[]{budgetId}, locale));
         } catch (BudgetNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("error.budget.notfound", new Object[]{budgetId}, locale));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while updating a budget");
+                    .body(messageSource.getMessage("error.budget.serverDeleting", null, locale));
         }
     }
 }

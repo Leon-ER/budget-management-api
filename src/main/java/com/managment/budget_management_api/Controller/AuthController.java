@@ -21,7 +21,9 @@ public class AuthController {
     private MessageSource messageSource;
 
     @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@Valid @RequestBody User user, @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+    public ResponseEntity<String> addUser(
+            @Valid @RequestBody User user,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             userService.save(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(messageSource.getMessage("response.user.created", null, locale));
