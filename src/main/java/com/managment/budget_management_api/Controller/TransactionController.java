@@ -1,9 +1,14 @@
 package com.managment.budget_management_api.Controller;
 
 import com.managment.budget_management_api.Exceptions.TransactionNotFoundException;
+import com.managment.budget_management_api.Exceptions.UserNotFoundException;
+import com.managment.budget_management_api.Model.TransactionSummary;
 import com.managment.budget_management_api.Service.ITransactionService;
+import com.managment.budget_management_api.Service.TransactionServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.managment.budget_management_api.Model.Transaction;
 import org.springframework.http.HttpStatus;
@@ -13,11 +18,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/transactions")
 @Validated
 public class TransactionController {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
+
     @Autowired
     private ITransactionService transactionService;
 
@@ -80,6 +88,27 @@ public class TransactionController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(messageSource.getMessage("error.transaction.serverDeleting", null, locale));
+        }
+    }
+
+    @GetMapping("/summary/{userId}")
+    public ResponseEntity<?> getTransactionSummary(
+            @Min(1) @PathVariable Integer userId,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+        try {
+            Optional<TransactionSummary> summary = transactionService.getSummary(userId);
+            if (summary.isPresent()) {
+                return ResponseEntity.ok(summary.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(messageSource.getMessage("error.transaction.notfound", new Object[]{userId}, locale));
+            }
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(messageSource.getMessage("error.transaction.serverRetrieving", null, locale));
         }
     }
 }
