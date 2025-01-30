@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income vs Expenses Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section input,
+        .filter-section button {
+            margin-right: 10px;
+        }
+
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-flow: column;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div>
+        <h1>Income vs Expenses Report</h1>
+    </div>
+    <div class="filter-section">
+        <label for="userId">User ID:</label>
+        <input type="number" id="userId" placeholder="Enter User ID">
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate">
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate">
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" placeholder="Optional">
+
+        <button onclick="fetchReport()">Generate Report</button>
+    </div>
+</div>
+
+
+<div class="chart-container">
+    <canvas id="incomeExpensesChart"></canvas>
+</div>
+
+<script>
+    let startDate;
+    let endDate;
+    async function fetchReport() {
+        const userId = document.getElementById('userId').value;
+        startDate = document.getElementById('startDate').value;
+        endDate = document.getElementById('endDate').value;
+        const category = document.getElementById('category').value;
+
+        if (!userId || !startDate || !endDate) {
+            alert("Please enter User ID, Start Date, and End Date.");
+            return;
+        }
+        console.log({ userId, startDate, endDate, category });
+
+        const apiUrl = `http://localhost:8080/api/reports/income-vs-expenses/${userId}?startDate=${startDate}&endDate=${endDate}&category=${category}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch report data: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            renderChart(data);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to generate the report. Please try again.");
+        }
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('incomeExpensesChart').getContext('2d');
+
+        if (window.reportChart) {
+            window.reportChart.destroy();
+        }
+
+        window.reportChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Income', 'Expenses', 'Net Balance'],
+                datasets: [{
+                    label: 'Amount (USD)',
+                    data: [data.totalIncome, data.totalExpense, data.totalBalance],
+                    backgroundColor: ['#4caf50', '#f44336', '#2196f3']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: `Income vs Expenses (${startDate} to ${endDate})`
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (CAD)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

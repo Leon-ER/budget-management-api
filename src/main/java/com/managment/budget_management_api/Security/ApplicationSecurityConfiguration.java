@@ -18,8 +18,6 @@ public class ApplicationSecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
 
-
-
     public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
@@ -35,6 +33,7 @@ public class ApplicationSecurityConfiguration {
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/budget/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/transactions/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/reports/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
 
                 .httpBasic(Customizer.withDefaults())
