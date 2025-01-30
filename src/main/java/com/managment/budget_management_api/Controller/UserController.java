@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.MessageSource;
+
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,48 +21,76 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @PutMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@Min(1) @PathVariable Integer userId, @Valid @RequestBody User user) {
+    public ResponseEntity<String> updateUser(
+            @Min(1) @PathVariable Integer userId,
+            @Valid @RequestBody User user,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
-            User updatedUser = userService.update(userId, user);
-            return ResponseEntity.ok(updatedUser);
+            userService.update(userId, user);
+            return ResponseEntity.ok(
+                    messageSource.getMessage("response.user.updated", new Object[]{userId}, locale)
+            );
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale)
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while updating a user");
+                    .body(messageSource.getMessage("error.user.serverUpdating", null, locale));
         }
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@Min(1) @PathVariable Integer userId) {
-        return ResponseEntity.ok(userService.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with id, %s not found", userId))));
+    public ResponseEntity<?> getUser(
+            @Min(1) @PathVariable Integer userId,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+        try {
+            return ResponseEntity.ok(userService.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(
+                            messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale))));
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale));
+        }
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@Min(1) @PathVariable Integer userId) {
+    public ResponseEntity<String> deleteUser(
+            @Min(1) @PathVariable Integer userId,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             userService.deleteById(userId);
-            return ResponseEntity.ok(String.format("User with ID: %s deleted successfully", userId));
+            return ResponseEntity.ok(
+                    messageSource.getMessage("response.user.deleted", new Object[]{userId}, locale)
+            );
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    messageSource.getMessage("error.user.notfound", new Object[]{userId}, locale)
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while deleting a user");
+                    .body(messageSource.getMessage("error.user.serverDeleting", null, locale));
         }
     }
 
     @PostMapping("/saveAdmin")
-    public ResponseEntity<String> saveAdmin(@Min(1) @RequestBody User user) {
+    public ResponseEntity<String> saveAdmin(
+            @RequestBody @Valid User user,
+            @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         try {
             userService.addAdminUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Admin added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    messageSource.getMessage("response.user.created", null, locale)
+            );
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while adding the admin user.");
+                    .body(messageSource.getMessage("error.user.serverAdding", null, locale));
         }
     }
 }

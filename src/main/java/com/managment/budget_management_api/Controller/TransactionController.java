@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.MessageSource;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -17,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
     @Autowired
     private ITransactionService transactionService;
+
+    private final MessageSource messageSource;
+
+    public TransactionController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @PostMapping("/addTransaction")
     public ResponseEntity<String> addTransaction(@Valid @RequestBody Transaction transaction) {
