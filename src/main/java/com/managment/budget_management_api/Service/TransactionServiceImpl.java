@@ -29,6 +29,11 @@ public class TransactionServiceImpl implements ITransactionService {
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * Saves a transaction to the database if it's not null
+     * @param transaction new transaction
+     * @return transaction if saved correctly
+     */
     @Override
     public Transaction save(Transaction transaction) {
         if (transaction == null) {
@@ -43,6 +48,13 @@ public class TransactionServiceImpl implements ITransactionService {
         }
     }
 
+    /**
+     * Checks if transaction with the given id exists in the database if it does
+     * update the transaction with the fields provided from the transactionDetails param
+     * @param transactionID to query DB to check if exists
+     * @param transactionDetails new transaction information
+     * @return updated transaction
+     */
     @Override
     public Transaction update(Integer transactionID, Transaction transactionDetails) {
         logger.info("Attempting to update transaction with ID: {}", transactionID);
@@ -64,11 +76,24 @@ public class TransactionServiceImpl implements ITransactionService {
         return transactionRepository.save(existingTransaction);
     }
 
+    /**
+     * Checks if the transaction with the given id exists in the database if it does return it
+     * @param transactionID to query DB to check if exists
+     * @return Transaction
+     */
     @Override
     public Optional<Transaction> findById(Integer transactionID) {
         return transactionRepository.findById(transactionID);
     }
 
+    /** Checks database if user ID exists if it does
+     *  Find all transactions associated to the userId
+     *  Calculates the total Income and total expenses depending on the transactions
+     *
+     *
+     * @param userID to query DB to check if exists
+     * @return TransactionSummary object with total income total, expenses and total balance
+     */
     @Override
     public Optional<TransactionSummary> getSummary(Integer userID) {
         logger.info("Attempting to retrieve transaction summaries for user ID: {}", userID);
@@ -80,11 +105,13 @@ public class TransactionServiceImpl implements ITransactionService {
         if (transactions.isEmpty()) {
             return Optional.empty();
         }
+        // Iterate over the transactions list, filter by "INCOME" type, extract the amount, and calculate the total income.
         BigDecimal totalIncome = transactions.stream()
                 .filter(t -> "INCOME".equalsIgnoreCase(t.getTransactionType()))
                 .map(t -> t.getAmount())
                 .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
+        // Iterate over the transactions list, filter by "EXPENSE" type, extract the amount, and calculate the total income.
         BigDecimal totalExpenses = transactions.stream()
                 .filter(t -> "EXPENSE".equalsIgnoreCase(t.getTransactionType()))
                 .map(t -> t.getAmount())
@@ -96,6 +123,10 @@ public class TransactionServiceImpl implements ITransactionService {
         return Optional.of(new TransactionSummary(totalIncome, totalExpenses, totalBalance));
     }
 
+    /**
+     * Checks if the given transactionId exists in the database if it does delete the transaction
+     * @param transactionID to query DB to check if exists
+     */
     @Transactional
     @Override
     public void deleteById(Integer transactionID) {

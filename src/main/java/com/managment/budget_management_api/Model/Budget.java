@@ -8,6 +8,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * User Budget sets restrictions and used Jakarta Validator to validate if certain fields are not blank
+ */
 @Entity
 @Table(name = "Budgets")
 @Getter

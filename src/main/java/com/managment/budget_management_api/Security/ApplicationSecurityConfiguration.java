@@ -22,6 +22,14 @@ public class ApplicationSecurityConfiguration {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    /**
+     * Blocks access to certain endpoints based in the user role returned by the UserDetailsService bean
+     * If role doesn't match the users accounts blocks access to the endpoint
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -42,6 +50,15 @@ public class ApplicationSecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Configuration class for defining the UserDetailsService bean.
+     *
+     * Takes the user information provided in the form validates them by checking if they exist in the BD if they do
+     * Create a spring security object with the email , password and the role
+     * If user not found throws an exception
+     * @param userRepository
+     * @return
+     */
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return email -> userRepository.findByEmail(email)
