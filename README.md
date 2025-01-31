@@ -87,3 +87,36 @@ mvn spring-boot:run
 - Expense & income management 
 - Report generation 
 - REST API with Spring Boot
+
+## APi endpoint list
+
+### Auth endpoints (Public)
+
+* /api/auth/addUser
+
+### User (Must be admin)
+
+* /api/users/saveAdmin
+* /api/users/{userId}
+* /api/users/update/{userId}
+* /api/users/delete/{userId}
+
+### Budget (Admin or User)
+
+* /api/budget/addBudget
+* /api/budget/{budgetId}
+* /api/budget/update/{budgetId}
+* /api/budget/delete/{budgetId}
+
+### Transaction (Admin or User)
+
+* /api/transactions/addTransaction
+* /api/transactions/{transactionId}
+* /api/transactions/update/{transactionId}
+* /api/transactions/deleteTransaction/{transactionId}
+* /api/transactions/summary/{userId}
+
+### Reports (Admin or User)
+
+* /api/reports/income-vs-expenses/{userId}
+* /api/reports.html (for chart based reports)
