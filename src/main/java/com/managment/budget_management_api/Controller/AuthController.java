@@ -20,6 +20,13 @@ public class AuthController {
     @Autowired
     private MessageSource messageSource;
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param user   The user details to be saved.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the registration operation.
+     */
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(
             @Valid @RequestBody User user,

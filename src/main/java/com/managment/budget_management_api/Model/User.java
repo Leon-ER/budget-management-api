@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * User model sets restrictions and used Jakarta Validator to validate if certain fields are not blank
+ */
 @Entity
 @Table(name = "Users")
 @Getter

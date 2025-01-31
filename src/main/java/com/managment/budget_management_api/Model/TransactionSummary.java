@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/**
+ * Transaction Summary for reports and summary based on the user income and expenses
+ */
 @Getter
 @Setter
 public class TransactionSummary {

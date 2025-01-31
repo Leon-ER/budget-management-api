@@ -32,7 +32,13 @@ public class TransactionController {
     @Autowired
     private MessageSource messageSource;
 
-
+    /**
+     * Adds a new transaction.
+     *
+     * @param transaction The transaction details to be saved.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the creation operation.
+     */
     @PostMapping("/addTransaction")
     public ResponseEntity<String> addTransaction(
             @Valid @RequestBody Transaction transaction,
@@ -48,6 +54,14 @@ public class TransactionController {
         }
     }
 
+    /**
+     * Updates an existing transaction based on the provided transaction ID.
+     *
+     * @param transactionId The ID of the transaction to be updated (must be greater than 0).
+     * @param transaction The updated transaction details.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the update operation.
+     */
     @PutMapping("/update/{transactionId}")
     public ResponseEntity<String> updateTransaction(
             @Min(1) @PathVariable Integer transactionId,
@@ -64,6 +78,13 @@ public class TransactionController {
         }
     }
 
+    /**
+     * Retrieves a transaction by its ID.
+     *
+     * @param transactionId The ID of the transaction to retrieve (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return The transaction details if found, or an error message if not.
+     */
     @GetMapping("/{transactionId}")
     public ResponseEntity<?> getTransaction(
             @Min(1) @PathVariable Integer transactionId,
@@ -76,6 +97,13 @@ public class TransactionController {
         }
     }
 
+    /**
+     * Deletes a transaction by its ID.
+     *
+     * @param transactionId The ID of the transaction to delete (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the delete operation.
+     */
     @DeleteMapping("/deleteTransaction/{transactionId}")
     public ResponseEntity<String> deleteTransaction(
             @Min(1) @PathVariable Integer transactionId,
@@ -91,6 +119,13 @@ public class TransactionController {
         }
     }
 
+    /**
+     * Retrieves a summary of transactions for a specific user.
+     *
+     * @param userId The ID of the user whose transaction summary is requested (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return A summary of transactions if found, or an error message if not.
+     */
     @GetMapping("/summary/{userId}")
     public ResponseEntity<?> getTransactionSummary(
             @Min(1) @PathVariable Integer userId,

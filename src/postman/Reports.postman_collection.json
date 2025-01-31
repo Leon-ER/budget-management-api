@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "d9290caa-e00f-4df6-bd9c-c40d09da903d",
+		"name": "Reports",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38361499",
+		"_collection_link": "https://www.postman.com/technical-cosmologist-91547609/budgetmanagementapi/collection/ut2zdks/reports?action=share&source=collection_link&creator=38361499"
+	},
+	"item": [
+		{
+			"name": "Get report",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "leon",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "leon@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/reports/income-vs-expenses/1?startDate=2025-01-29&endDate=2025-01-30",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"reports",
+						"income-vs-expenses",
+						"1"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2025-01-29"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-01-30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

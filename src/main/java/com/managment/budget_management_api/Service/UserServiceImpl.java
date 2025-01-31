@@ -20,6 +20,11 @@ public class UserServiceImpl implements IUserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Saves a user to the database
+     * @param user new user
+     * @return Error if issue arises
+     */
     @Override
     public User save(User user) {
         if (user == null) {
@@ -27,7 +32,9 @@ public class UserServiceImpl implements IUserService {
         }
         logger.info("Adding user with ID: {}", user.getUserId());
         try {
-            user.setRole("USER");
+            if (user.getRole() == null) {
+                user.setRole("USER");
+            }
             return userRepository.save(user);
         } catch (Exception e) {
             logger.error("Error while saving user", e);
@@ -35,6 +42,13 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    /**
+     * Updates the user in the database
+     * if the user exists and the values provided from the User object are not null
+     * @param userId  to query DB to check if exists
+     * @param userDetails new user information
+     * @return updated user
+     */
     @Override
     public User update(Integer userId, User userDetails) {
         logger.info("Attempting to update user with ID: {}", userId);
@@ -56,11 +70,20 @@ public class UserServiceImpl implements IUserService {
         return userRepository.save(existingUser);
     }
 
+    /**
+     * Find the user in the database by their id and returns the user
+     * @param userId to query DB to check if exists
+     * @return user if found
+     */
     @Override
     public Optional<User> findById(Integer userId) {
         return userRepository.findById(userId);
     }
 
+    /**
+     * Checks if the given userId exists in the database if it does delete the user
+     * @param userId to query DB to check if exists
+     */
     @Override
     @Transactional
     public void deleteById(Integer userId) {
@@ -71,6 +94,11 @@ public class UserServiceImpl implements IUserService {
         logger.info("User with ID: {} deleted successfully", userId);
     }
 
+    /**
+     * Saves an admin to the database (only admins can use this)
+     * @param user new user
+     * @return user if added
+     */
     @Override
     public User addAdminUser(User user) {
         if (user == null) {

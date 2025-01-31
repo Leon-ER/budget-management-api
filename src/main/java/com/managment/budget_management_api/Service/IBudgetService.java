@@ -4,6 +4,9 @@ import com.managment.budget_management_api.Model.Budget;
 
 import java.util.Optional;
 
+/**
+ * Interface for Budget service implementation
+ */
 public interface IBudgetService {
 
     Budget save(Budget budget);

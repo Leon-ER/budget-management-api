@@ -46,7 +46,7 @@ public class ReportGenerationService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
-        // Get transactions
+        // Get transactions based on user input by category or not
         List<Transaction> transactions;
         if (category != null && !category.isEmpty()) {
             transactions = transactionRepository.findByUser_UserIdAndBudget_CategoryNameAndTransactionDateBetween(userId, category, startDateTime, endDateTime);

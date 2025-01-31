@@ -21,7 +21,6 @@ public class BudgetServiceImpl implements IBudgetService {
     }
     @Override
     public Budget save(Budget budget) {
-        logger.info("Adding budget " + budget.getBudgetId());
         if(budget == null){
             throw new IllegalArgumentException("Budget cannot be null");
         }
@@ -32,7 +31,6 @@ public class BudgetServiceImpl implements IBudgetService {
             logger.error("Error while saving user", e);
             throw new RuntimeException("Unable to save user", e);
         }
-
     }
 
     @Override

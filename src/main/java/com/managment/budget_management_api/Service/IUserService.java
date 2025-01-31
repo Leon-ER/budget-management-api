@@ -4,6 +4,9 @@ import com.managment.budget_management_api.Model.User;
 
 import java.util.Optional;
 
+/**
+ * Interface for User service implementation
+ */
 public interface IUserService {
     User save(User user);
 

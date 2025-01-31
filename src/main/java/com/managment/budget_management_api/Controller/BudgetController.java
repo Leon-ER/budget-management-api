@@ -25,6 +25,13 @@ public class BudgetController {
     @Autowired
     private MessageSource messageSource;
 
+    /**
+     * Adds a new budget entry.
+     *
+     * @param budget The budget details to be saved.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the creation operation.
+     */
     @PostMapping("/addBudget")
     public ResponseEntity<String> addBudget(
             @Valid @RequestBody Budget budget,
@@ -41,6 +48,14 @@ public class BudgetController {
         }
     }
 
+    /**
+     * Updates an existing budget entry based on the provided budget ID.
+     *
+     * @param budgetId The ID of the budget to be updated (must be greater than 0).
+     * @param budget The updated budget details.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the update operation.
+     */
     @PutMapping("/update/{budgetId}")
     public ResponseEntity<String> updateBudget(
             @Min(1) @PathVariable Integer budgetId,
@@ -57,6 +72,13 @@ public class BudgetController {
         }
     }
 
+    /**
+     * Retrieves a budget by its ID.
+     *
+     * @param budgetId The ID of the budget to retrieve (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return The budget details if found, or an error message if not.
+     */
     @GetMapping("/{budgetId}")
     public ResponseEntity<?> getBudget(
             @Min(1) @PathVariable Integer budgetId,
@@ -70,6 +92,13 @@ public class BudgetController {
 
     }
 
+    /**
+     * Deletes a budget by its ID.
+     *
+     * @param budgetId The ID of the budget to delete (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the delete operation.
+     */
     @DeleteMapping("/delete/{budgetId}")
     public ResponseEntity<String> deleteBudget(
             @Min(1) @PathVariable Integer budgetId,

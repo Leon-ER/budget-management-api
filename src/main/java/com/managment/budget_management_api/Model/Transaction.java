@@ -8,6 +8,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Transaction model sets restrictions and used Jakarta Validator to validate if certain fields are not blank
+ */
 @Entity
 @Table(name = "Transactions")
 @Getter
@@ -46,4 +49,5 @@ public class Transaction {
     public Transaction(){
         this.transactionDate = LocalDateTime.now();
     }
+
 }

@@ -5,6 +5,9 @@ import com.managment.budget_management_api.Model.TransactionSummary;
 
 import java.util.Optional;
 
+/**
+ * Interface for transaction service implementation
+ */
 public interface ITransactionService {
 
     Transaction save(Transaction transaction);

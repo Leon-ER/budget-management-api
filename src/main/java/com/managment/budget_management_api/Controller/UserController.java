@@ -24,6 +24,14 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
+    /**
+     * Updates an existing user based on the provided user ID and request body.
+     *
+     * @param userId The ID of the user to be updated (must be greater than 0).
+     * @param user The updated user details.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the update operation.
+     */
     @PutMapping("/update/{userId}")
     public ResponseEntity<String> updateUser(
             @Min(1) @PathVariable Integer userId,
@@ -43,7 +51,13 @@ public class UserController {
                     .body(messageSource.getMessage("error.user.serverUpdating", null, locale));
         }
     }
-
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param userId The ID of the user to retrieve (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return The user details if found, or an error message if not.
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUser(
             @Min(1) @PathVariable Integer userId,
@@ -57,6 +71,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param userId The ID of the user to delete (must be greater than 0).
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the delete operation.
+     */
 
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(
@@ -77,6 +98,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a new admin user.
+     *
+     * @param user The user details to be added.
+     * @param locale The locale for internationalized messages.
+     * @return A response indicating success or failure of the creation operation.
+     */
     @PostMapping("/saveAdmin")
     public ResponseEntity<String> saveAdmin(
             @RequestBody @Valid User user,
